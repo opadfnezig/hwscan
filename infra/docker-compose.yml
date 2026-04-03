@@ -1,0 +1,70 @@
+services:
+  # ─── PostgreSQL 16 with LZ4 ──────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: hw5c4n
+      POSTGRES_PASSWORD: ${PG_PASSWORD:?set PG_PASSWORD in .env}
+      POSTGRES_DB: hw5c4n
+    command:
+      - postgres
+      - -c
+      - default_toast_compression=lz4
+      - -c
+      - wal_compression=lz4
+      - -c
+      - shared_buffers=128MB
+      - -c
+      - work_mem=4MB
+      - -c
+      - maintenance_work_mem=64MB
+      - -c
+      - effective_cache_size=512MB
+    ports:
+      - "${BIND_ADDR:-0.0.0.0}:5432:5432"
+    volumes:
+      - /tank/pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hw5c4n"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ─── Garage S3-compatible object storage ─────────────────────────────────
+  garage:
+    image: dxflrs/garage:v2.2.0
+    restart: unless-stopped
+    volumes:
+      - ./garage.toml:/etc/garage.toml:ro
+      - /tank/garage/meta:/var/lib/garage/meta
+      - /tank/garage/data:/var/lib/garage/data
+    ports:
+      - "${BIND_ADDR:-0.0.0.0}:3900:3900"   # S3 API
+      - "${BIND_ADDR:-0.0.0.0}:3903:3903"   # Admin API
+    healthcheck:
+      test: ["CMD", "/garage", "stats", "-a"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ─── Kafka (shared by all scrapers) ──────────────────────────────────────
+  kafka:
+    image: apache/kafka:3.9.0
+    restart: unless-stopped
+    environment:
+      KAFKA_NODE_ID: "0"
+      KAFKA_PROCESS_ROLES: controller,broker
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://${KAFKA_ADVERTISED_HOST:-localhost}:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 0@kafka:9093
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LOG_RETENTION_HOURS: "168"
+      KAFKA_LOG_SEGMENT_BYTES: "1073741824"
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      CLUSTER_ID: "hw5c4n-kafka-cluster-001"
+    ports:
+      - "${BIND_ADDR:-0.0.0.0}:9092:9092"
+    volumes:
+      - /tank/kafka:/tmp/kraft-combined-logs

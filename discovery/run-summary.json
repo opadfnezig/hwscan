@@ -1,0 +1,35 @@
+{
+  "startTime": "2025-12-14T14:11:44.553Z",
+  "platforms": [
+    {
+      "platform": "Bazos.cz",
+      "script": "discovery/bazos.js",
+      "exitCode": 0,
+      "duration": 8897,
+      "success": true
+    },
+    {
+      "platform": "Tori.fi",
+      "script": "discovery/tori.js",
+      "exitCode": 0,
+      "duration": 11737,
+      "success": true
+    },
+    {
+      "platform": "OLX.ua",
+      "script": "discovery/olx.js",
+      "exitCode": 0,
+      "duration": 22047,
+      "success": true
+    },
+    {
+      "platform": "Aukro.cz",
+      "script": "discovery/aukro.js",
+      "exitCode": 0,
+      "duration": 5837,
+      "success": true
+    }
+  ],
+  "endTime": "2025-12-14T14:12:42.091Z",
+  "totalDuration": 57537
+}

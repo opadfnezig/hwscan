@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<title>PC bazar | Bazoš.cz</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="description" content="PC bazar zdarma. Vybírejte z 49 112 inzerátů. Prodej snadno a rychle na Bazoši. Přes půl milionů uživatelů za den."><meta property="og:title" content="PC bazar">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Bazos.cz">
+<meta property="og:description" content="PC bazar zdarma. Vybírejte z 49 112 inzerátů. Prodej snadno a rychle na Bazoši. Přes půl milionů uživatelů za den.">
+<link rel="canonical" href="https://pc.bazos.cz/"><meta property="fb:admins" content="1055875657">
+<link rel="stylesheet" href="https://www.bazos.cz/bazos66s.css" type="text/css"><link rel="preload" as="image" href="https://www.bazos.cz/obrazky/bazos.svg">
+<link rel="stylesheet" href="https://www.bazos.cz/bazosprint.css" type="text/css" media="print">
+<link rel="icon" href="https://www.bazos.cz/favicon.svg" type="image/svg+xml">
+<link rel="icon" HREF="https://www.bazos.cz/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="https://www.bazos.cz/apple-touch-icon.png">
+<script>
+var xhr = new XMLHttpRequest();
+var naseptavac_value = '';
+function naseptavac(value) {
+  if (value=='')  {
+  	naseptavac_value = '';
+  	document.getElementById('vysledek').innerHTML='';
+  	}
+else {
+	if (naseptavac_value == value) {
+		return false;
+	}
+	naseptavac_value = value;
+	setTimeout(function () {
+		if (naseptavac_value != value) {
+			return false;
+		}
+		xhr.onreadystatechange = function() {
+ 		 if (this.readyState == 4 && naseptavac_value == value){
+				document.getElementById('vysledek').innerHTML = this.responseText;
+			}
+ 		 };
+		xhr.open("POST", '/suggest.php');
+		xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+		xhr.send('rubnas=PC&catnas=&qnas='+encodeURIComponent(naseptavac_value));
+	}, 250);
+}
+}
+
+var naseptavacpsc_value = '';
+function naseptavacpsc(value) {
+  if (value=='')  {
+  	naseptavacpsc_value = '';
+  	document.getElementById('vysledekpsc').innerHTML='<table cellpadding=\"3\" cellspacing=\"0\" class=\"tablenaspsc\"><tr><td class=\"act\" onclick=\"getLocation();\"><b>Inzeráty v okolí</b></td></tr></table>';
+  	}
+else {
+	if (naseptavacpsc_value == value) {
+		return false;
+	}
+	naseptavacpsc_value = value;
+	setTimeout(function () {
+		if (naseptavacpsc_value != value) {
+			return false;
+		}
+		xhr.onreadystatechange = function() {
+ 		 if (this.readyState == 4 && naseptavacpsc_value == value){
+				document.getElementById('vysledekpsc').innerHTML = this.responseText;
+			}
+ 		 };
+		xhr.open("POST", '/suggestpsc.php');
+		xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+		xhr.send('qnaspsc='+encodeURIComponent(naseptavacpsc_value));
+	}, 250);
+}
+}
+
+function getLocation() {
+if (navigator.geolocation) {navigator.geolocation.getCurrentPosition(showPosition);}
+else {document.getElementById('hlokalita').value = '';}
+}
+function showPosition(position) {
+		xhr.onreadystatechange = function() {
+ 		 if (this.readyState == 4){
+				document.getElementById('hlokalita').value = this.responseText;
+				document.forms['formt'].submit();
+			}
+ 		 };
+		xhr.open("POST", '/zip.php');
+		xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+		xhr.send('latitude='+encodeURIComponent(position.coords.latitude)+'&longitude='+encodeURIComponent(position.coords.longitude));
+}
+
+var agent_value = '';
+function agentclick() {
+  if (document.getElementById('agentmail').value=='')  {
+  	document.getElementById("agentmail").focus();
+    return false;
+  	}
+else {
+agent_value = document.getElementById('agentmail').value;
+xhr.onreadystatechange = function() {
+  if (this.readyState == 4){
+				document.getElementById('overlay').innerHTML = this.responseText;
+			}
+  };
+xhr.open("POST", '/agent.php');
+xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+xhr.send('hledat=&rubrikav=PC&hlokalita=&humkreis=&cenaod=&cenado=&cat=&typ=&agentmail='+encodeURIComponent(agent_value));
+}
+}
+
+function odeslatrequest(value,params) {
+xhr.onreadystatechange = function() {
+  if (this.readyState == 4){
+				document.getElementById('overlay').innerHTML = this.responseText;
+			}
+  };
+xhr.open("POST", value);
+xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+xhr.send(params);
+}
+function overlay() {
+	el = document.getElementById("overlay");
+	el.style.display = (el.style.display == "inline") ? "none" : "inline";
+}
+function odeslatakci(postaction,value1,value2,value3) {
+document.getElementById('postaction').value = postaction;
+document.getElementById("postv1").value = value1;
+document.getElementById("postv2").value = value2;
+document.getElementById("postv3").value = value3;
+document.formaction.submit();
+}
+</script>
+</head>
+
+<body>
+
+
+<div class="sirka">
+<div class="listalogor">
+<div class="listalogol"><a href="https://www.bazos.cz/" title="Bazos.cz - Inzerce, bazar"><img src="https://www.bazos.cz/obrazky/bazos.svg" width="199" height="34" alt="Bazos.cz - Inzerce, inzeráty"></a></div>
+<div class="listalogom"><b>... bazar pro každého</b></div>
+<div class="listalogop"><a href="https://www.bazos.cz/oblibene.php"><b>Oblíbené inzeráty</b></a> <a href="https://www.bazos.cz/moje-inzeraty.php"><b>Moje inzeráty</b></a> <a href="/pridat-inzerat.php"><b><span class=pridati>Přidat inzerát</span></b></a></div>
+</div>
+<form name="formt" id="formt" method=get >
+<div class="listah">
+<div class="rubriky">
+<b>
+Co: <span class=vysokoli><span id="vysledek"></span><input type="search" onkeyup="naseptavac(this.value);" id=hledat name=hledat size="17" maxlength="256" value="" autocomplete="off" title="Co? Vyhledávaný výraz"></span>
+
+<select name="rubriky" onchange='this.form.submit();' title="Vyber rubriku">
+<option value="www">Všechny rubriky</option>
+<option value="auto">Auto</option><option value="deti">Děti</option><option value="dum">Dům a zahrada</option><option value="elektro">Elektro</option><option value="foto">Foto</option><option value="hudba">Hudba</option><option value="knihy">Knihy</option><option value="mobil">Mobily</option><option value="motorky">Motorky</option><option value="nabytek">Nábytek</option><option value="obleceni">Oblečení</option><option value="pc" selected>PC</option><option value="prace">Práce</option><option value="reality">Reality</option><option value="sluzby">Služby</option><option value="sport">Sport</option><option value="stroje">Stroje</option><option value="vstupenky">Vstupenky</option><option value="zvirata">Zvířata</option><option value="ostatni">Ostatní</option></select>
+
+Lokalita: <span class=vysokolipsc><span id="vysledekpsc"></span><input type="search" name="hlokalita" id="hlokalita" onkeyup="naseptavacpsc(this.value);" onclick="naseptavacpsc(this.value);" value="" size="4" maxlength="25" autocomplete="off" title="Kde? PSČ (místo)" style="-webkit-appearance: none;"></span>
+Okolí: <input name="humkreis" title="Okolí v km" value="25" size="3" style="width: 25px;"> km
+Cena od: <input name=cenaod title="Cena od Kč" maxlength="12" size="5" value=""> - do: <input name=cenado title="Cena do Kč" maxlength="12" size="5" value=""> Kč <input type="submit" name="Submit" value="Hledat">
+<input type="hidden" name="order" id="order"><input type="hidden" name="crp" id="crp"><input type="hidden" id="kitx" name="kitx" value="ano"></b>
+</div>
+</div>
+</form>
+<div class="drobky"><a href="https://www.bazos.cz/" title="Inzerce Bazoš">Hlavní stránka</a>  > <h1 class="nadpiskategorie">PC</h1></div>
+<br>
+
+
+<div class="flexmain"><div class="menuleft"><div class="nadpismenu">Kategorie</div>
+<div class="barvalmenu">
+<div class="barvaleva">
+<a href="/cd/" >DVD, Blu-ray mechaniky</a>
+<a href="https://foto.bazos.cz/">Fotoaparáty</a>
+<a href="/gps/" >GPS navigace</a>
+<a href="/graficka/" >Grafické karty</a>
+<a href="/hdd/" >Hard disky, SSD</a>
+<a href="/playstation/" >Herní konzole</a>
+<a href="/volanty/" >Herní zařízení</a>
+<a href="/hry/" >Hry</a>
+<a href="/chladic/" >Chladiče</a>
+<a href="/klavesnice/" >Klávesnice</a>
+<a href="/kopirka/" >Kopírovací stroje</a>
+<a href="/monitor/" >LCD monitory</a>
+<a href="https://mobil.bazos.cz/">Mobilní telefony</a>
+<a href="/modem/" >Modemy</a>
+<a href="/mys/" >Myši</a>
+<a href="/notebook/" >Notebooky</a>
+<a href="/pamet/" >Paměti</a>
+<a href="/pc/" >PC, Počítače</a>
+<a href="/procesor/" >Procesory</a>
+<a href="/sit/" >Síťové prvky</a>
+<a href="/scaner/" >Scanery</a>
+<a href="/case/" >Skříně, zdroje</a>
+<a href="/software/" >Software</a>
+<a href="/spotrebni/" >Spotřební materiál</a>
+<a href="/tablet/" >Tablety, E-čtečky</a>
+<a href="/tiskarna/" >Tiskárny</a>
+<a href="/wifi/" >Wireless, WiFi</a>
+<a href="/motherboard/" >Základní desky</a>
+<a href="/ups/" >Záložní zdroje</a>
+<a href="/sound/" >Zvukové karty</a>
+<a href="/ostatni/" >Ostatní</a>
+</div></div>
+
+<br><div class="mobilskryt" style="text-align: center;">
+<a style="font-size: 13px;text-decoration: none;color:#000000;" href="https://www.jasminka.cz/kniha/jiri-janca-josef-a-zentrich-herbar-lecivych-rostlin-komplet-1-7dil.html" target="_blank" rel=”nofollow”><b>Knihkupectví Jasmínka</b><br>
+<span style="font-size: 13px;text-decoration: none;color:#ff6600;">
+<span style="color:#000000;">Jiří Janča, Josef A. Zentrich:</span> Herbář léčivých rostlin - komplet 1.-7.díl<br><img src="https://www.jasminka.cz/images/v/herbarcv.jpg" width="100" alt="Knihkupectví Jasmínka" title="Knihkupectví Jasmínka" style="border: 1px solid Black;margin: 4px;">
+<br>
+<img src="https://www.bazos.cz/kosik.svg" alt="Jasminka" height="22" style="border: 0px;"> koupit</span></a></div>
+
+</div><div class="maincontent">
+
+
+<div class="listainzerat inzeratyflex">
+<div class="inzeratynadpis"><img src="https://www.bazos.cz/obrazky/list.gif" width="18" height="16" alt="List inzerátů" class=gallerylista> <form name="formgal" id="formgal" method="post" style="display: inline;"><input type="hidden" name="gal" value="g"><input type="image" alt="Submit" src="https://www.bazos.cz/obrazky/gallery.gif" width="18" height="16" class="gallerylist inputgal"></form> Zobrazeno 1-20 inzerátů z 49 112</div>
+<div class="inzeratycena"><b><span onclick="document.getElementById('order').value=1;document.forms['formt'].submit();" class="paction">Cena</span></b></div>
+<div class="inzeratylok">Lokalita</div>
+<div class="inzeratyview"><span onclick="document.getElementById('order').value=3;document.forms['formt'].submit();" class="paction">Zobrazeno</span></div>
+</div><form name="formaction" method="post" style="display: inline;"><input type="hidden" id="postaction" name="postaction" value=""><input type="hidden" id="postv1" name="postv1" value=""><input type="hidden" id="postv2" name="postv2" value=""><input type="hidden" id="postv3" name="postv3" value=""></form><button type="button" onclick="odeslatrequest('/agent.php','teloverit=');overlay();">Nové inzeráty e-mailem</button>
+	<div id="overlay">
+     <div></div>
+</div>
+
+<div id="container_one"></div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="/inzerat/212158416/hp-zbook-fury-16-g9i7-12850hx32gb2tbrtx-a2000zaruka.php"><img src="https://www.bazos.cz/img/1t/416/212158416.jpg?t=1765659490" class="obrazek" alt="HP ZBook Fury 16 G9|i7-12850HX|32GB|2TB|RTX A2000|Záruka" width="170" height="128"></a>
+<h2 class=nadpis><a href="/inzerat/212158416/hp-zbook-fury-16-g9i7-12850hx32gb2tbrtx-a2000zaruka.php">HP ZBook Fury 16 G9|i7-12850HX|32GB|2TB|RTX A2000|Záruka</a></h2><span class=velikost10> - <span title="TOP 7x Platí do 10.1. 2026" class="ztop">TOP</span> - [14.12. 2025]</span><br>
+<div class=popis>Prodám špičkový výkonný notebook HP ZBook Fury 16 G9, ideální pro nejnáročnější pracovní nasazení – CAD, 3D rendering, videoeditaci, simulace, virtualizaci a AI aplikace.
+
+Notebook je v perfektním stavu, důkladně otestovaný a připravený k použití.  ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">  29 990 Kč</span></b></div>
+<div class="inzeratylok">Pelhřimov<br>394 03</div>
+<div class="inzeratyview">118 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','212158416');return false;" class="akce paction">Označit špatný inzerát</span> <span onclick="odeslatakci('category','212158416');return false;" class="akce paction">Chybnou kategorii</span> <span onclick="odeslatakci('rating','564333','333996','SHComp+-+Honza');return false;" class="akce paction">Ohodnotit uživatele</span> <span onclick="odeslatakci('edit','212158416');return false;" class="akce paction">Smazat/Upravit/Topovat</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="/inzerat/212175654/herni-pc-ryzen-5-5600-rtx-5060-8gb-16gb-ram-ssd-1tb.php"><img src="https://www.bazos.cz/img/1t/654/212175654.jpg?t=1765712397" class="obrazek" alt="HERNÍ PC- Ryzen 5 5600, RTX 5060 8GB, 16GB RAM, SSD 1TB" width="170" height="128"></a>
+<h2 class=nadpis><a href="/inzerat/212175654/herni-pc-ryzen-5-5600-rtx-5060-8gb-16gb-ram-ssd-1tb.php">HERNÍ PC- Ryzen 5 5600, RTX 5060 8GB, 16GB RAM, SSD 1TB</a></h2><span class=velikost10> - <span title="TOP 6x Platí do 10.1. 2026" class="ztop">TOP</span> - [14.12. 2025]</span><br>
+<div class=popis>Nabízím k prodeji výkonný počítač připravený k okamžitému převzetí. Je možné osobní setkání, při kterém si můžete zařízení před zakoupením otestovat.
+Sestava skvěle poslouží jak pro hraní současných titulů ve vysoké kvalitě, tak i pro náročnější pra ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">  21 490 Kč</span></b></div>
+<div class="inzeratylok">Ostrava<br>702 00</div>
+<div class="inzeratyview">83 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','212175654');return false;" class="akce paction">Označit špatný inzerát</span> <span onclick="odeslatakci('category','212175654');return false;" class="akce paction">Chybnou kategorii</span> <span onclick="odeslatakci('rating','7567816','5410815','PC');return false;" class="akce paction">Ohodnotit uživatele</span> <span onclick="odeslatakci('edit','212175654');return false;" class="akce paction">Smazat/Upravit/Topovat</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="/inzerat/212116252/hp-probook-650-g5-i5-8365u16gb512gb-ssdzarukawin-11.php"><img src="https://www.bazos.cz/img/1t/252/212116252.jpg?t=1765567123" class="obrazek" alt="HP ProBook 650 G5 |i5-8365U|16GB|512GB SSD|Záruka|WIN 11" width="170" height="128"></a>
+<h2 class=nadpis><a href="/inzerat/212116252/hp-probook-650-g5-i5-8365u16gb512gb-ssdzarukawin-11.php">HP ProBook 650 G5 |i5-8365U|16GB|512GB SSD|Záruka|WIN 11</a></h2><span class=velikost10> - <span title="TOP 7x Platí do 9.1. 2026" class="ztop">TOP</span> - [14.12. 2025]</span><br>
+<div class=popis>Prodám výkonný a spolehlivý notebook HP ProBook 650 G5, ideální pro každodenní pracovní nasazení, studium nebo domácí použití. Tento model se vyznačuje skvělým výkonem, robustním provedením a dlouhou výdrží, což z něj činí vynikající volbu nejen pro  ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">  5 790 Kč</span></b></div>
+<div class="inzeratylok">Pelhřimov<br>394 03</div>
+<div class="inzeratyview">230 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','212116252');return false;" class="akce paction">Označit špatný inzerát</span> <span onclick="odeslatakci('category','212116252');return false;" class="akce paction">Chybnou kategorii</span> <span onclick="odeslatakci('rating','564333','333996','SHComp+-+Honza');return false;" class="akce paction">Ohodnotit uživatele</span> <span onclick="odeslatakci('edit','212116252');return false;" class="akce paction">Smazat/Upravit/Topovat</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="/inzerat/212108359/18-masina-pro-ai-fotky-video-64gb-rtx-pro-core-ultra.php"><img src="https://www.bazos.cz/img/1t/359/212108359.jpg?t=1765550858" class="obrazek" alt="18&quot; mašina pro AI, fotky, video - 64GB, RTX PRO, Core Ultra" width="170" height="128"></a>
+<h2 class=nadpis><a href="/inzerat/212108359/18-masina-pro-ai-fotky-video-64gb-rtx-pro-core-ultra.php">18&quot; mašina pro AI, fotky, video - 64GB, RTX PRO, Core Ultra</a></h2><span class=velikost10> - <span title="TOP 6x Platí do 8.1. 2026" class="ztop">TOP</span> - [14.12. 2025]</span><br>
+<div class=popis>MOŽNO ODKOUPIT VÁŠ POČÍTAČ NEBO NOTEBOOK PROTIÚČTEM! SJEDUJTE I MÉ DALŠÍ INZERÁTY!
+
+Prodám tento speciální našlapaný notebook Dell Pro Max 18 Plus! Je to nový kus, najeto 4h provozu, prodloužená záruka do 11.8.2029! Pořízen před měsícem za 69 990Kč ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">  49 999 Kč</span></b></div>
+<div class="inzeratylok">Praha 10<br>102 00</div>
+<div class="inzeratyview">227 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','212108359');return false;" class="akce paction">Označit špatný inzerát</span> <span onclick="odeslatakci('category','212108359');return false;" class="akce paction">Chybnou kategorii</span> <span onclick="odeslatakci('rating','7706443','6598922','DenisM');return false;" class="akce paction">Ohodnotit uživatele</span> <span onclick="odeslatakci('edit','212108359');return false;" class="akce paction">Smazat/Upravit/Topovat</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="/inzerat/211873036/macbook-air-13-m4-cz-2025-stribrny-novy-nevybaleny.php"><img src="https://www.bazos.cz/img/1t/036/211873036.jpg?t=1765562290" class="obrazek" alt="MacBook Air 13&quot; M4 CZ 2025 Stříbrný - Nový, nevybalený" width="170" height="128"></a>
+<h2 class=nadpis><a href="/inzerat/211873036/macbook-air-13-m4-cz-2025-stribrny-novy-nevybaleny.php">MacBook Air 13&quot; M4 CZ 2025 Stříbrný - Nový, nevybalený</a></h2><span class=velikost10> - <span title="TOP 11x Platí do 8.1. 2026" class="ztop">TOP</span> - [14.12. 2025]</span><br>
+<div class=popis>Nabízím k prodeji nový, nevybalený MacBook Air 13, procesor M4, 256GB, CZ, barva stříbrná. Originál záruka Apple 1 rok po registraci. Dárek, který nevyužiji a raději jej přenechám někomu, kdo jej využije. Preferuji osobní předání, platba po kontrole  ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">  20 000 Kč</span></b></div>
+<div class="inzeratylok">Ostrava<br>703 00</div>
+<div class="inzeratyview">1020 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','211873036');return false;" class="akce paction">Označit špatný inzerát</span> <span onclick="odeslatakci('category','211873036');return false;" class="akce paction">Chybnou kategorii</span> <span onclick="odeslatakci('rating','9106499','7164077','Martin');return false;" class="akce paction">Ohodnotit uživatele</span> <span onclick="odeslatakci('edit','211873036');return false;" class="akce paction">Smazat/Upravit/Topovat</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="/inzerat/212171909/ultrabook-hp-elitebook-820-g3-full-hd-ips-i5-ram-8gb-ssd.php"><img src="https://www.bazos.cz/img/1t/909/212171909.jpg?t=1765721179" class="obrazek" alt="UltraBook HP EliteBook 820 G3 FULL HD IPS-i5-RAM 8GB-SSD" width="170" height="128"></a>
+<h2 class=nadpis><a href="/inzerat/212171909/ultrabook-hp-elitebook-820-g3-full-hd-ips-i5-ram-8gb-ssd.php">UltraBook HP EliteBook 820 G3 FULL HD IPS-i5-RAM 8GB-SSD</a></h2><span class=velikost10> - <span title="TOP 5x Platí do 8.1. 2026" class="ztop">TOP</span> - [14.12. 2025]</span><br>
+<div class=popis>UltraBook HP EliteBook 820 G3
+Inzerát platný do smazání
+
+Použito jen na stole, baterie výdrž 3-5 hodiny běžné práce
+
+Původní cena 18000kč
+
+100% funkční
+
+CPU Intel vPRO i5 6200 SkyLake 4x2.4GHz, TurboBoost 4x2.8GHz
+
+RAM 8GB
+
+SSD M.2 128GB ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">  2 499 Kč</span></b></div>
+<div class="inzeratylok">Pardubice<br>535 01</div>
+<div class="inzeratyview">53 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','212171909');return false;" class="akce paction">Označit špatný inzerát</span> <span onclick="odeslatakci('category','212171909');return false;" class="akce paction">Chybnou kategorii</span> <span onclick="odeslatakci('rating','2150084','456561','Pavel+H.');return false;" class="akce paction">Ohodnotit uživatele</span> <span onclick="odeslatakci('edit','212171909');return false;" class="akce paction">Smazat/Upravit/Topovat</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="/inzerat/212076881/lenovo-x13-gen-5-ultra-7-32gb-zaruka-lenovo-2028.php"><img src="https://www.bazos.cz/img/1t/881/212076881.jpg?t=1765533420" class="obrazek" alt="█ Lenovo X13 gen 5 (ULTRA 7, 32GB, záruka Lenovo 2028)█" width="170" height="128"></a>
+<h2 class=nadpis><a href="/inzerat/212076881/lenovo-x13-gen-5-ultra-7-32gb-zaruka-lenovo-2028.php">█ Lenovo X13 gen 5 (ULTRA 7, 32GB, záruka Lenovo 2028)█</a></h2><span class=velikost10> - <span title="TOP 6x Platí do 7.1. 2026" class="ztop">TOP</span> - [14.12. 2025]</span><br>
+<div class=popis>Kompaktní výkonný Thinkpad. Prémiová záruka přímo u Lenova 3 roky do 10/2028. Jsem plátce DPH. Váha jen 1.17kg. 
+
+Parametry:
+• CPU Intel core Ultra 7 155U 12 jáder 14 vláken! 1,6 - 4,8Ghz (2P+8E + 14T, AI Boost)
+• LCD FHD IPS 14" 1920x1200 (16:10 ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">  29 500 Kč</span></b></div>
+<div class="inzeratylok">Brno<br>615 00</div>
+<div class="inzeratyview">166 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','212076881');return false;" class="akce paction">Označit špatný inzerát</span> <span onclick="odeslatakci('category','212076881');return false;" class="akce paction">Chybnou kategorii</span> <span onclick="odeslatakci('rating','3169','6038','Jakub+R.');return false;" class="akce paction">Ohodnotit uživatele</span> <span onclick="odeslatakci('edit','212076881');return false;" class="akce paction">Smazat/Upravit/Topovat</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="/inzerat/211980302/hp-pavilion-27-ca0001nc-ryzen7-5700u16gb1tbssd-win11-zar.php"><img src="https://www.bazos.cz/img/1t/302/211980302.jpg?t=1765609608" class="obrazek" alt="HP Pavilion 27 ca0001nc Ryzen7 5700U/16GB/1TBSSD Win11 ZAR" width="170" height="128"></a>
+<h2 class=nadpis><a href="/inzerat/211980302/hp-pavilion-27-ca0001nc-ryzen7-5700u16gb1tbssd-win11-zar.php">HP Pavilion 27 ca0001nc Ryzen7 5700U/16GB/1TBSSD Win11 ZAR</a></h2><span class=velikost10> - <span title="TOP 8x Platí do 7.1. 2026" class="ztop">TOP</span> - [14.12. 2025]</span><br>
+<div class=popis>Dostupnost: 2ks
+
+Stylový All-in-One počítač ve stavu nového počítače.
+Běžel zhruba rok, nyní již nevyužitý.
+Technicky i vzhledově 100% stav, tichý provoz, připravený k okamžitému používání.
+Velký 27” QHD displej, rychlý procesor Ryzen 7 a rychlé ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">  18 990 Kč</span></b></div>
+<div class="inzeratylok">Trutnov<br>541 01</div>
+<div class="inzeratyview">231 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','211980302');return false;" class="akce paction">Označit špatný inzerát</span> <span onclick="odeslatakci('category','211980302');return false;" class="akce paction">Chybnou kategorii</span> <span onclick="odeslatakci('rating','5953366','3541119','JD');return false;" class="akce paction">Ohodnotit uživatele</span> <span onclick="odeslatakci('edit','211980302');return false;" class="akce paction">Smazat/Upravit/Topovat</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="/inzerat/212139716/samsung-990-pro-4tb-nvme-m2-ssd-novy-zaruka.php"><img src="https://www.bazos.cz/img/1t/716/212139716.jpg?t=1765626565" class="obrazek" alt="Samsung 990 PRO 4TB NVMe M.2 SSD | Nový | Záruka" width="170" height="128"></a>
+<h2 class=nadpis><a href="/inzerat/212139716/samsung-990-pro-4tb-nvme-m2-ssd-novy-zaruka.php">Samsung 990 PRO 4TB NVMe M.2 SSD | Nový | Záruka</a></h2><span class=velikost10> - <span title="TOP 5x Platí do 7.1. 2026" class="ztop">TOP</span> - [14.12. 2025]</span><br>
+<div class=popis>Prodám nový, nerozbalený SSD disk Samsung 990 PRO NVMe M.2 s obrovskou kapacitou 4 TB. Pokud hledáte opravdu výkonné a rychlé úložiště pro náročné aplikace, hry nebo práci s velkými daty, tohle je skvělá volba. Vhodné i pro PlayStation 5, pracovní st ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">  6 490 Kč</span></b></div>
+<div class="inzeratylok">Pelhřimov<br>394 03</div>
+<div class="inzeratyview">134 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','212139716');return false;" class="akce paction">Označit špatný inzerát</span> <span onclick="odeslatakci('category','212139716');return false;" class="akce paction">Chybnou kategorii</span> <span onclick="odeslatakci('rating','564333','333996','SHComp+-+Honza');return false;" class="akce paction">Ohodnotit uživatele</span> <span onclick="odeslatakci('edit','212139716');return false;" class="akce paction">Smazat/Upravit/Topovat</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="/inzerat/212127588/meta-quest-3s-128gb-zaruka-alza.php"><img src="https://www.bazos.cz/img/1t/588/212127588.jpg?t=1765610540" class="obrazek" alt="Meta Quest 3S 128GB - Záruka Alza" width="170" height="128"></a>
+<h2 class=nadpis><a href="/inzerat/212127588/meta-quest-3s-128gb-zaruka-alza.php">Meta Quest 3S 128GB - Záruka Alza</a></h2><span class=velikost10> - <span title="TOP 5x Platí do 7.1. 2026" class="ztop">TOP</span> - [14.12. 2025]</span><br>
+<div class=popis>Prodám prakticky nepoužitý Meta Quest 3S. Kupován 27.7.2025 tudíž je skoro nový. Originální krabice i balení, ke konzoli přidám brašnu na bezpečné uschování a přenášení. Původní cena 8500,- + přepravní pouzdro 1000,-.Možnost zaslat při platbě předem, ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">  6 900 Kč</span></b></div>
+<div class="inzeratylok">Praha 1<br>110 00</div>
+<div class="inzeratyview">103 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','212127588');return false;" class="akce paction">Označit špatný inzerát</span> <span onclick="odeslatakci('category','212127588');return false;" class="akce paction">Chybnou kategorii</span> <span onclick="odeslatakci('rating','9120250','7180325','Jakub');return false;" class="akce paction">Ohodnotit uživatele</span> <span onclick="odeslatakci('edit','212127588');return false;" class="akce paction">Smazat/Upravit/Topovat</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="/inzerat/212125766/asus-rog-zephyrus-g14-ga403ww.php"><img src="https://www.bazos.cz/img/1t/766/212125766.jpg?t=1765616159" class="obrazek" alt="RTX 5080 Asus ROG Zephyrus G14, Premium Care" width="170" height="128"></a>
+<h2 class=nadpis><a href="/inzerat/212125766/asus-rog-zephyrus-g14-ga403ww.php">RTX 5080 Asus ROG Zephyrus G14, Premium Care</a></h2><span class=velikost10> - <span title="TOP 5x Platí do 7.1. 2026" class="ztop">TOP</span> - [14.12. 2025]</span><br>
+<div class=popis>Asus ROG Zephyrus G14 GA403WW
+
+14" OLED 120 Hz, 2880 x 1800 px, 3K, HDR True Black 500
+Advanced Optimus, MUX switch, Nvidia Gsync
+CPU: AMD Ryzen AI 9 HX 370
+GPU: NVIDIA GeForce RTX 5080 16 GB
+SSD: Kingston KC3000 4TB
+RAM : 32 GB LPDDRX 8000 MHz ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">  70 000 Kč</span></b></div>
+<div class="inzeratylok">Český Krumlov<br>381 01</div>
+<div class="inzeratyview">151 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','212125766');return false;" class="akce paction">Označit špatný inzerát</span> <span onclick="odeslatakci('category','212125766');return false;" class="akce paction">Chybnou kategorii</span> <span onclick="odeslatakci('rating','8784998','6796559','Jiho%C4%8Dech');return false;" class="akce paction">Ohodnotit uživatele</span> <span onclick="odeslatakci('edit','212125766');return false;" class="akce paction">Smazat/Upravit/Topovat</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="/inzerat/212105337/herni-pc-rtx-5050-ryzen-5-5500-32gb-ram-1tb-ssd-w11pro.php"><img src="https://www.bazos.cz/img/1t/337/212105337.jpg?t=1765545886" class="obrazek" alt="Herní PC, RTX 5050, Ryzen 5 5500, 32GB RAM, 1TB SSD, W11PRO" width="170" height="128"></a>
+<h2 class=nadpis><a href="/inzerat/212105337/herni-pc-rtx-5050-ryzen-5-5500-32gb-ram-1tb-ssd-w11pro.php">Herní PC, RTX 5050, Ryzen 5 5500, 32GB RAM, 1TB SSD, W11PRO</a></h2><span class=velikost10> - <span title="TOP 5x Platí do 6.1. 2026" class="ztop">TOP</span> - [14.12. 2025]</span><br>
+<div class=popis>Nejlepší na: Render videí, Cyberpunk 2077, Fortnite, 3D Práce
+Možné odkoupení vašeho starého PC
+
+Repas premium:
+• Nová počítačová skříň ✅ ‼️
+• Všechny komponenty ve stavu 97%+ ✅ ‼️
+• Ideální na Hraní her, školu a práci ✅ ‼️
+• Záruka 12 měsíců ✅ ‼️
+•  ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">  17 999 Kč</span></b></div>
+<div class="inzeratylok">Praha 6<br>162 00</div>
+<div class="inzeratyview">351 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','212105337');return false;" class="akce paction">Označit špatný inzerát</span> <span onclick="odeslatakci('category','212105337');return false;" class="akce paction">Chybnou kategorii</span> <span onclick="odeslatakci('rating','8192416','6342551','Sa%C5%A1ovy+Kompy');return false;" class="akce paction">Ohodnotit uživatele</span> <span onclick="odeslatakci('edit','212105337');return false;" class="akce paction">Smazat/Upravit/Topovat</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="/inzerat/212104780/herni-pc-rtx-5060-ryzen-7-5700-32gb-ram-125tb-w11pro.php"><img src="https://www.bazos.cz/img/1t/780/212104780.jpg?t=1765544702" class="obrazek" alt="Herní PC, RTX 5060, Ryzen 7 5700, 32GB RAM, 1.25TB, W11PRO" width="170" height="128"></a>
+<h2 class=nadpis><a href="/inzerat/212104780/herni-pc-rtx-5060-ryzen-7-5700-32gb-ram-125tb-w11pro.php">Herní PC, RTX 5060, Ryzen 7 5700, 32GB RAM, 1.25TB, W11PRO</a></h2><span class=velikost10> - <span title="TOP 5x Platí do 6.1. 2026" class="ztop">TOP</span> - [14.12. 2025]</span><br>
+<div class=popis>Nejlepší na: Render videí, Cyberpunk 2077, Fortnite, 3D Práce
+Možné odkoupení vašeho starého PC
+
+Repas premium:
+• PC komponenty ve stavu 97%+ ✅ ‼️
+• Profesionálně vyčištěný ✅ ‼️
+• Perfektně zabalený jako dárek ✅ ‼️
+• Záruka 12 měsíců ✅ ‼️
+• Bílá Skří ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">  21 999 Kč</span></b></div>
+<div class="inzeratylok">Praha 6<br>162 00</div>
+<div class="inzeratyview">301 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','212104780');return false;" class="akce paction">Označit špatný inzerát</span> <span onclick="odeslatakci('category','212104780');return false;" class="akce paction">Chybnou kategorii</span> <span onclick="odeslatakci('rating','8192416','6342551','Sa%C5%A1ovy+Kompy');return false;" class="akce paction">Ohodnotit uživatele</span> <span onclick="odeslatakci('edit','212104780');return false;" class="akce paction">Smazat/Upravit/Topovat</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="/inzerat/212070876/so-dimm-32gb-2x16gb-ddr5-5600.php"><img src="https://www.bazos.cz/img/1t/876/212070876.jpg?t=1765473177" class="obrazek" alt="Lenovo SO DIMM 32GB 2x16GB DDR5 5600" width="170" height="128"></a>
+<h2 class=nadpis><a href="/inzerat/212070876/so-dimm-32gb-2x16gb-ddr5-5600.php">Lenovo SO DIMM 32GB 2x16GB DDR5 5600</a></h2><span class=velikost10> - <span title="TOP 5x Platí do 5.1. 2026" class="ztop">TOP</span> - [14.12. 2025]</span><br>
+<div class=popis>Prodám tyto paměti, vytaženy z mého nového NB Lenovo ThinkPad T16 Gen 4 (icu7 255u), z důvodu upgrade.
+
+2x Lenovo SO DIMM 16GB 5600 MHz viz foto
+
+Rychlé jednání dohoda, osobně/zasilkovna apod.
+
+</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">  4 999 Kč</span></b></div>
+<div class="inzeratylok">Ostrava<br>710 00</div>
+<div class="inzeratyview">209 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','212070876');return false;" class="akce paction">Označit špatný inzerát</span> <span onclick="odeslatakci('category','212070876');return false;" class="akce paction">Chybnou kategorii</span> <span onclick="odeslatakci('rating','64801','60549','Michal');return false;" class="akce paction">Ohodnotit uživatele</span> <span onclick="odeslatakci('edit','212070876');return false;" class="akce paction">Smazat/Upravit/Topovat</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="/inzerat/212064379/dell-pe-r640-10xsff-2x-xeon-gold-6140-128gb-ram-perc-h730.php"><img src="https://www.bazos.cz/img/1t/379/212064379.jpg?t=1765486396" class="obrazek" alt="Dell PE R640 10xSFF, 2x Xeon Gold 6140, 128GB RAM, PERC H730" width="170" height="128"></a>
+<h2 class=nadpis><a href="/inzerat/212064379/dell-pe-r640-10xsff-2x-xeon-gold-6140-128gb-ram-perc-h730.php">Dell PE R640 10xSFF, 2x Xeon Gold 6140, 128GB RAM, PERC H730</a></h2><span class=velikost10> - <span title="TOP 5x Platí do 5.1. 2026" class="ztop">TOP</span> - [14.12. 2025]</span><br>
+<div class=popis>Prodám 4 kusy 1U Serveru Dell PowerEdge R640 funkční, čistý připravený k nasazení.
+
+K prodeji vystavím fakturu (nelze odečíst DPH) - záruka 6 měsíců
+
+Konfigurace:
+
+10 předních pozic pro 2.5" (SFF) - bez disků a rámečků (možno dokoupit za zvýhod ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">  17 999 Kč</span></b></div>
+<div class="inzeratylok">Pardubice<br>535 01</div>
+<div class="inzeratyview">115 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','212064379');return false;" class="akce paction">Označit špatný inzerát</span> <span onclick="odeslatakci('category','212064379');return false;" class="akce paction">Chybnou kategorii</span> <span onclick="odeslatakci('rating','8920054','5898506','serverio.cz');return false;" class="akce paction">Ohodnotit uživatele</span> <span onclick="odeslatakci('edit','212064379');return false;" class="akce paction">Smazat/Upravit/Topovat</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="/inzerat/211972283/vykonny-hp-zbook-fury-15-i7-10850h32gb1tbrtx3000-w11-zar.php"><img src="https://www.bazos.cz/img/1t/283/211972283.jpg?t=1765629053" class="obrazek" alt="Výkonný HP ZBook Fury 15 i7-10850H/32GB/1TB/RTX3000 W11 ZAR" width="170" height="128"></a>
+<h2 class=nadpis><a href="/inzerat/211972283/vykonny-hp-zbook-fury-15-i7-10850h32gb1tbrtx3000-w11-zar.php">Výkonný HP ZBook Fury 15 i7-10850H/32GB/1TB/RTX3000 W11 ZAR</a></h2><span class=velikost10> - <span title="TOP 6x Platí do 5.1. 2026" class="ztop">TOP</span> - [14.12. 2025]</span><br>
+<div class=popis>Extra výkonná mobilní pracovní stanice HP ZBook Fury 15 G7.
+Plně funkční, profesionálně repasovaný notebook, s drobnými kosmetickými nedostatky u Kensington locku (viz foto) - jen estetické.
+Technicky ve 100% stavu, připravený k okamžitému použití. ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">  15 990 Kč</span></b></div>
+<div class="inzeratylok">Trutnov<br>541 01</div>
+<div class="inzeratyview">188 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','211972283');return false;" class="akce paction">Označit špatný inzerát</span> <span onclick="odeslatakci('category','211972283');return false;" class="akce paction">Chybnou kategorii</span> <span onclick="odeslatakci('rating','5953366','3541119','JD');return false;" class="akce paction">Ohodnotit uživatele</span> <span onclick="odeslatakci('edit','211972283');return false;" class="akce paction">Smazat/Upravit/Topovat</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="/inzerat/211343126/oledlenovo-legion-pro-7r9-9955hx3d64gb2tbrtx-5080-16gb.php"><img src="https://www.bazos.cz/img/1t/126/211343126.jpg?t=1765692238" class="obrazek" alt="OLED_LENOVO LEGION PRO 7_R9-9955HX3D_64GB_2TB_RTX 5080 16GB" width="170" height="128"></a>
+<h2 class=nadpis><a href="/inzerat/211343126/oledlenovo-legion-pro-7r9-9955hx3d64gb2tbrtx-5080-16gb.php">OLED_LENOVO LEGION PRO 7_R9-9955HX3D_64GB_2TB_RTX 5080 16GB</a></h2><span class=velikost10> - <span title="TOP 4x Platí do 5.1. 2026" class="ztop">TOP</span> - [14.12. 2025]</span><br>
+<div class=popis>---JEN VOLAT---***HERNÍ MASAKR!!!***(ODPOČET DPH 66033KČ)***
+VEŠKERÉ FOTOGRAFIE JSOU REÁLNÉ - KUPUJETE CO VIDÍTE. KLIKNUTÍM NA JMÉNO KOUKNĚTE NA DALŠÍ MOJE NABÍDKY
+Chtěl bych zde nabídnout vysoce výkonný notebook pro hraní her na vysoké detaily
+
+ ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">  79 900 Kč</span></b></div>
+<div class="inzeratylok">Děčín<br>405 02</div>
+<div class="inzeratyview">628 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','211343126');return false;" class="akce paction">Označit špatný inzerát</span> <span onclick="odeslatakci('category','211343126');return false;" class="akce paction">Chybnou kategorii</span> <span onclick="odeslatakci('rating','1090722','12956','PC+LEVN%C4%9A');return false;" class="akce paction">Ohodnotit uživatele</span> <span onclick="odeslatakci('edit','211343126');return false;" class="akce paction">Smazat/Upravit/Topovat</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="/inzerat/212020239/156-msi-katana-i7-13620h16gb-ram512-ssdrtx-4070-8gb.php"><img src="https://www.bazos.cz/img/1t/239/212020239.jpg?t=1765372550" class="obrazek" alt="15,6&quot; MSI KATANA i7-13620H,16GB RAM,512 SSD,RTX 4070 8GB" width="170" height="128"></a>
+<h2 class=nadpis><a href="/inzerat/212020239/156-msi-katana-i7-13620h16gb-ram512-ssdrtx-4070-8gb.php">15,6&quot; MSI KATANA i7-13620H,16GB RAM,512 SSD,RTX 4070 8GB</a></h2><span class=velikost10> - <span title="TOP 5x Platí do 4.1. 2026" class="ztop">TOP</span> - [14.12. 2025]</span><br>
+<div class=popis>Herní notebook MSI KATANA v Top stavu + herní myš
+
+RAPTOR-LAKE / 10.JÁDRO / 16.VLÁKEN / Intel Core i7-13620H / 3.60 GHz / 4.90 GHz
+
+15.6" / FULL-HD / IPS / 144 Hz
+
+RAM: 16 GB DDR5 4800Mhz
+
+SSD: 512 GB SSD M.2 NVMe PCIe Gen4
+
+NVIDIA GeForce  ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">  25 500 Kč</span></b></div>
+<div class="inzeratylok">Plzeň<br>323 00</div>
+<div class="inzeratyview">384 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','212020239');return false;" class="akce paction">Označit špatný inzerát</span> <span onclick="odeslatakci('category','212020239');return false;" class="akce paction">Chybnou kategorii</span> <span onclick="odeslatakci('rating','0','4557784','LVI');return false;" class="akce paction">Ohodnotit uživatele</span> <span onclick="odeslatakci('edit','212020239');return false;" class="akce paction">Smazat/Upravit/Topovat</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="/inzerat/212134610/samsung-990-pro-2tb-nvme-m2-ssd-novy-zaruka.php"><img src="https://www.bazos.cz/img/1t/610/212134610.jpg?t=1765620413" class="obrazek" alt="Samsung 990 PRO 2TB NVMe M.2 SSD | Nový | Záruka" width="170" height="128"></a>
+<h2 class=nadpis><a href="/inzerat/212134610/samsung-990-pro-2tb-nvme-m2-ssd-novy-zaruka.php">Samsung 990 PRO 2TB NVMe M.2 SSD | Nový | Záruka</a></h2><span class=velikost10> - <span title="TOP 4x Platí do 4.1. 2026" class="ztop">TOP</span> - [14.12. 2025]</span><br>
+<div class=popis>Prodám nový, nerozbalený SSD disk Samsung 990 PRO NVMe M.2 s kapacitou 2TB. Pokud chcete, aby byl váš počítač nebo herní sestava opravdu rychlá a spolehlivá, je tento disk skvělou volbou. Načítání systému, her nebo velkých souborů bude doslova blesko ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">  3 790 Kč</span></b></div>
+<div class="inzeratylok">Pelhřimov<br>394 03</div>
+<div class="inzeratyview">114 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','212134610');return false;" class="akce paction">Označit špatný inzerát</span> <span onclick="odeslatakci('category','212134610');return false;" class="akce paction">Chybnou kategorii</span> <span onclick="odeslatakci('rating','564333','333996','SHComp+-+Honza');return false;" class="akce paction">Ohodnotit uživatele</span> <span onclick="odeslatakci('edit','212134610');return false;" class="akce paction">Smazat/Upravit/Topovat</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="/inzerat/212133067/samsung-990-pro-2tb-heatsink-nvme-m2-ssd-novy-zaruka.php"><img src="https://www.bazos.cz/img/1t/067/212133067.jpg?t=1765620389" class="obrazek" alt="Samsung 990 PRO 2TB Heatsink NVMe M.2 SSD | Nový | Záruka" width="170" height="128"></a>
+<h2 class=nadpis><a href="/inzerat/212133067/samsung-990-pro-2tb-heatsink-nvme-m2-ssd-novy-zaruka.php">Samsung 990 PRO 2TB Heatsink NVMe M.2 SSD | Nový | Záruka</a></h2><span class=velikost10> - <span title="TOP 4x Platí do 4.1. 2026" class="ztop">TOP</span> - [14.12. 2025]</span><br>
+<div class=popis>Prodám nový, nerozbalený SSD disk Samsung 990 PRO NVMe M.2 s kapacitou 2TB a heatsinkem (chladičem). Pokud chcete, aby byl váš počítač nebo herní konzole opravdu rychlý a spolehlivý, je tento disk skvělou volbou. Načítání systému, her nebo velkých so ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">  4 290 Kč</span></b></div>
+<div class="inzeratylok">Pelhřimov<br>394 03</div>
+<div class="inzeratyview">95 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','212133067');return false;" class="akce paction">Označit špatný inzerát</span> <span onclick="odeslatakci('category','212133067');return false;" class="akce paction">Chybnou kategorii</span> <span onclick="odeslatakci('rating','564333','333996','SHComp+-+Honza');return false;" class="akce paction">Ohodnotit uživatele</span> <span onclick="odeslatakci('edit','212133067');return false;" class="akce paction">Smazat/Upravit/Topovat</span>
+</div>
+</div>
+<div id="container_two"></div><br><div class="strankovani">Stránka: <b><span class=cisla>1</span></b> <a href="/20/">2</a> <a href="/40/">3</a> <a href="/60/">4</a> <a href="/80/">5</a> <a href="/100/">6</a> <a href="/120/">7</a> <a href="/140/">8</a> <a href="/20/"><b>Další</b></a></div><br><br><br>
+
+
+</div></div><br>
+
+&copy;2025 Bazoš -  <b>Inzerce, Bazar </b><br>
+<a href="https://www.bazos.cz/napoveda.php">Nápověda</a>, <a href="https://www.bazos.cz/dotazy.php">Dotazy</a>, <a href="https://www.bazos.cz/hodnoceni.php">Hodnocení</a>, <a href="https://www.bazos.cz/kontakt.php">Kontakt</a>, <a href="https://www.bazos.cz/reklama.php">Reklama</a>, <a href="https://www.bazos.cz/podminky.php">Podmínky</a>, <a href="https://www.bazos.cz/ochrana-udaju.php">Ochrana údajů</a>, <a href="https://www.bazos.cz/rss.php?rub=pc">RSS</a>, <form name="formvkm" id="formvkm" method="post" style="display: inline;"><input type="hidden" name="vkm" value="m"><input type="submit" class="vkm" value="Mobilní verze"></form><br>
+
+Inzeráty PC celkem: <b>49093</b>, za 24 hodin: <b>2532</b><br><br>
+<a href="https://www.bazos.cz/mapa-kategorie.php">Mapa kategorií</a>, <a href="https://pc.bazos.cz/mapa-search.php">Nejvyhledávanější výrazy</a>
+<br>
+Země: <a href="https://pc.bazos.cz">Česká republika</a>, <a href="https://pc.bazos.sk">Slovensko</a>, <a href="https://komputer.bazos.pl">Polsko</a>, <a href="https://pc.bazos.at">Rakousko</a>
+<br>
+<br>
+</div>
+
+<script src="https://www.bazos.cz/cookie-consent.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+cookieconsent.run({"notice_banner_type":"simple","consent_type":"express","palette":"light","language":"cs","page_load_consent_levels":["strictly-necessary"],"notice_banner_reject_button_hide":false,"preferences_center_close_button_hide":false,"page_refresh_confirmation_buttons":false,"cookie_domain": "bazos.cz"});
+});
+</script>
+<a href="#" id="open_preferences_center"> </a>
+
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NZW1QTHKBB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-NZW1QTHKBB');
+</script>
+
+</body>
+</html>

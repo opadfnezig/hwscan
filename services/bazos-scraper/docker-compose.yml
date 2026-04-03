@@ -1,0 +1,150 @@
+x-worker-base: &worker-base
+  build: .
+  restart: unless-stopped
+  environment: &worker-env
+    ROLE: worker
+    REDIS_URL: redis://redis:6379
+    KAFKA_BROKERS: ${KAFKA_BROKERS:-172.16.17.3:9092}
+    KAFKA_TOPIC: ${KAFKA_TOPIC:-bazos.cz.listings}
+    IMAGES_DIR: /data/images
+    WORKER_CONCURRENCY: "2"
+    BASE_URL: ${BASE_URL:-https://pc.bazos.cz/}
+    PLATFORM_NAME: ${PLATFORM_NAME:-bazos.cz}
+    TELEGRAM_TOKEN: ${TELEGRAM_TOKEN:-}
+    TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID:-}
+  volumes:
+    - /data/images:/data/images
+  depends_on:
+    redis:
+      condition: service_healthy
+
+services:
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --appendonly yes --appendfsync everysec
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  controller:
+    build: .
+    restart: unless-stopped
+    environment:
+      ROLE: controller
+      REDIS_URL: redis://redis:6379
+      KAFKA_BROKERS: ${KAFKA_BROKERS:-172.16.17.3:9092}
+      KAFKA_TOPIC: ${KAFKA_TOPIC:-bazos.cz.listings}
+      BASE_URL: ${BASE_URL:-https://pc.bazos.cz/}
+      SCAN_INTERVAL_MS: "600000"
+      HTTP_PORT: "3000"
+      SEEN_URL_LIMIT: "1000"
+      IMAGES_DIR: /data/images
+      PROXY_INDEX: "0"
+      PLATFORM_NAME: ${PLATFORM_NAME:-bazos.cz}
+      TELEGRAM_TOKEN: ${TELEGRAM_TOKEN:-}
+      TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID:-}
+    ports:
+      - "3000:3000"
+    volumes:
+      - /data/images:/data/images
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  worker-0:
+    <<: *worker-base
+    environment:
+      <<: *worker-env
+      PROXY_INDEX: "0"
+
+  worker-1:
+    <<: *worker-base
+    environment:
+      <<: *worker-env
+      PROXY_INDEX: "1"
+
+  worker-2:
+    <<: *worker-base
+    environment:
+      <<: *worker-env
+      PROXY_INDEX: "2"
+
+  worker-3:
+    <<: *worker-base
+    environment:
+      <<: *worker-env
+      PROXY_INDEX: "3"
+
+  worker-4:
+    <<: *worker-base
+    environment:
+      <<: *worker-env
+      PROXY_INDEX: "4"
+
+  worker-5:
+    <<: *worker-base
+    environment:
+      <<: *worker-env
+      PROXY_INDEX: "5"
+
+  worker-6:
+    <<: *worker-base
+    environment:
+      <<: *worker-env
+      PROXY_INDEX: "6"
+
+  worker-7:
+    <<: *worker-base
+    environment:
+      <<: *worker-env
+      PROXY_INDEX: "7"
+
+  worker-8:
+    <<: *worker-base
+    environment:
+      <<: *worker-env
+      PROXY_INDEX: "8"
+
+  worker-9:
+    <<: *worker-base
+    environment:
+      <<: *worker-env
+      PROXY_INDEX: "9"
+
+  worker-10:
+    <<: *worker-base
+    environment:
+      <<: *worker-env
+      PROXY_INDEX: "10"
+
+  worker-11:
+    <<: *worker-base
+    environment:
+      <<: *worker-env
+      PROXY_INDEX: "11"
+
+  worker-12:
+    <<: *worker-base
+    environment:
+      <<: *worker-env
+      PROXY_INDEX: "12"
+
+  worker-13:
+    <<: *worker-base
+    environment:
+      <<: *worker-env
+      PROXY_INDEX: "13"
+
+  worker-14:
+    <<: *worker-base
+    environment:
+      <<: *worker-env
+      PROXY_INDEX: "14"
+
+volumes:
+  redis-data:

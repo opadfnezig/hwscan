@@ -1,0 +1,46 @@
+# System / dotfiles — only track project files
+.*
+!.gitignore
+!.env.example
+
+# Claude
+.claude/
+.claude.json
+.claude.json.backup
+
+# Dependencies
+node_modules/
+package-lock.json
+
+# Environment files (contain credentials)
+.env
+*.env
+!.env.example
+
+# Proxy credentials
+proxies.json
+
+# Data & images
+/data/
+*.csv
+
+# Analysis artifacts (images)
+*.png
+*.jpg
+*.jpeg
+
+# Docker overrides
+docker-compose.override.yml
+
+# Sessions (conversation logs)
+sessions/
+
+# Temporary files
+/tmp/
+*.tmp
+*.log
+
+# Python
+__pycache__/
+*.pyc
+.venv/
