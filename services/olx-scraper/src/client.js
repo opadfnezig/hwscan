@@ -1,12 +1,8 @@
-import { getAgent, UA } from './proxy.js';
-import { API_BASE, CATEGORY_ID, DOMAIN, ROLE } from './config.js';
-
-// Use Node 20 built-in fetch (undici) — different TLS fingerprint than node-fetch,
-// avoids CloudFront WAF blocks on the OLX API.
-const apiFetch = globalThis.fetch;
+import { scrapeJSON } from './anthill.js';
+import { API_BASE, CATEGORY_ID, DOMAIN } from './config.js';
 
 const API_HEADERS = {
-  'User-Agent': UA,
+  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
   'Accept': 'application/json, text/plain, */*',
   'Accept-Language': 'en-US,en;q=0.9',
   'Accept-Encoding': 'gzip, deflate, br',
@@ -20,33 +16,24 @@ const API_HEADERS = {
   'Sec-Fetch-Site': 'same-origin',
 };
 
+// OLX API: engine 'fetch' (undici TLS fingerprint), no proxy (API blocks proxies)
+const ANTHILL_OPTS = { engine: 'fetch', proxy: false, headers: API_HEADERS, timeout: 30000 };
+
 // ─── Category polling ─────────────────────────────────────────────────────────
 
 /**
  * Fetch one page of category listings sorted newest-first.
  * Returns { listings: [{id, url}], hasMore: bool }
- *
- * OLX API caps at 1000 accessible results (offset limit).
- * For new-listing detection we only need page 1 (offset=0).
  */
 export async function fetchCategoryPage(offset = 0, limit = 50) {
   const url = `${API_BASE}/offers/?category_id=${CATEGORY_ID}&sort_by=created_at:desc&limit=${limit}&offset=${offset}`;
-  const res = await apiFetch(url, {
-    headers: API_HEADERS,
-    redirect: 'follow',
-    signal: AbortSignal.timeout(30000),
-  });
-  if (!res.ok) {
-    const body = await res.text().catch(() => '');
-    throw new Error(`Category API HTTP ${res.status} for ${DOMAIN}: ${body.slice(0, 500)}`);
-  }
+  const json = await scrapeJSON(url, ANTHILL_OPTS);
 
-  const { data, links, metadata } = await res.json();
+  const { data, links, metadata } = json;
 
   // metadata.source.organic contains indices of non-promoted results.
-  // If empty/absent, all results are organic.
   const organicSet = new Set(metadata?.source?.organic ?? []);
-  const listings = data
+  const listings = (data || [])
     .filter((_, i) => organicSet.size === 0 || organicSet.has(i))
     .map(offer => ({ id: offer.id, url: offer.url }));
 
@@ -61,16 +48,11 @@ export async function fetchCategoryPage(offset = 0, limit = 50) {
  */
 export async function fetchListing(listingId) {
   const url = `${API_BASE}/offers/${listingId}/`;
-  const res = await apiFetch(url, {
-    headers: API_HEADERS,
-    redirect: 'follow',
-    signal: AbortSignal.timeout(30000),
-  });
+  const json = await scrapeJSON(url, ANTHILL_OPTS);
 
-  if (res.status === 404 || res.status === 410) return { deleted: true };
-  if (!res.ok) throw new Error(`Offer API HTTP ${res.status} for id=${listingId}`);
+  if (json._notFound) return { deleted: true };
 
-  const { data: offer } = await res.json();
+  const offer = json.data ?? json;
 
   // Inactive/expired listings show status !== 'active'
   if (offer.status !== 'active') return { deleted: true };
@@ -125,7 +107,7 @@ function parseOffer(offer) {
     location_city:   offer.location?.city?.name   ?? null,
     location_region: offer.location?.region?.name ?? null,
 
-    // Images (URLs — workers download to disk)
+    // Images (URLs — downloaded by controller)
     image_urls,
 
     // Seller
@@ -143,8 +125,8 @@ function parseOffer(offer) {
 
     // Delivery methods
     delivery: {
-      courier:  (offer.contact?.courier)         ?? false,  // seller accepts courier
-      olx_rock: (offer.delivery?.rock?.active)   ?? false,  // OLX's own delivery system
+      courier:  (offer.contact?.courier)         ?? false,
+      olx_rock: (offer.delivery?.rock?.active)   ?? false,
     },
 
     // Contact options

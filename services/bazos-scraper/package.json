@@ -1,19 +1,15 @@
 {
   "name": "bazos-scraper",
-  "version": "1.0.0",
-  "description": "Scraper microservice for bazos.cz hardware listings",
+  "version": "2.0.0",
+  "description": "Scraper microservice for bazos.cz/sk hardware listings",
   "type": "module",
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "node --watch src/index.js"
+    "start": "node src/index.js"
   },
   "dependencies": {
-    "bullmq": "^5.0.0",
     "cheerio": "^1.0.0",
     "fastify": "^5.7.4",
     "ioredis": "^5.0.0",
-    "kafkajs": "^2.0.0",
-    "node-fetch": "^3.0.0",
-    "socks-proxy-agent": "^8.0.0"
+    "kafkajs": "^2.0.0"
   }
 }

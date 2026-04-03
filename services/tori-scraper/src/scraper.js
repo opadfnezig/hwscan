@@ -1,18 +1,6 @@
-import fetch from 'node-fetch';
 import * as cheerio from 'cheerio';
-import { getAgent, UA } from './proxy.js';
+import { scrape } from './anthill.js';
 import { BASE_URL, CATEGORY_PARAM } from './config.js';
-
-const FETCH_OPTS = () => ({
-  agent: getAgent(),
-  redirect: 'follow',
-  timeout: 30000,
-  headers: {
-    'User-Agent': UA,
-    'Accept': 'text/html,application/xhtml+xml',
-    'Accept-Language': 'fi-FI,fi;q=0.9,en;q=0.5',
-  },
-});
 
 // ─── Category page ─────────────────────────────────────────────────────────
 
@@ -24,10 +12,11 @@ const FETCH_OPTS = () => ({
  */
 export async function scrapeCategoryPage(pageNum = 1) {
   const url = `${BASE_URL}/recommerce/forsale/search?${CATEGORY_PARAM}&sort=PUBLISHED_DESC&page=${pageNum}`;
-  const res = await fetch(url, FETCH_OPTS());
-  if (!res.ok) throw new Error(`Category page ${pageNum}: HTTP ${res.status}`);
+  const data = await scrape(url, { engine: 'axios', proxy: true });
 
-  const html = await res.text();
+  if (data.statusCode >= 400) throw new Error(`Category page ${pageNum}: HTTP ${data.statusCode}`);
+
+  const html = data.body;
   const $ = cheerio.load(html);
 
   // Find the large unnamed JSON script — dehydrated React Query state
@@ -79,12 +68,12 @@ export async function scrapeCategoryPage(pageNum = 1) {
  *   No LD+JSON Product → sold/expired (treated as deleted)
  */
 export async function scrapeListing(listingId, url) {
-  const res = await fetch(url, FETCH_OPTS());
+  const data = await scrape(url, { engine: 'axios', proxy: true });
 
-  if (res.status === 404) return { deleted: true, reason: 'removed' };
-  if (!res.ok) throw new Error(`Listing ${listingId}: HTTP ${res.status}`);
+  if (data.statusCode === 404) return { deleted: true, reason: 'removed' };
+  if (data.statusCode >= 400) throw new Error(`Listing ${listingId}: HTTP ${data.statusCode}`);
 
-  const html = await res.text();
+  const html = data.body;
 
   // Sold detection: "Myyty" badge in HTML
   if (html.includes('>Myyty<')) return { deleted: true, reason: 'sold' };

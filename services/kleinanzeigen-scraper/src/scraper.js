@@ -1,14 +1,6 @@
-import fetch from 'node-fetch';
 import * as cheerio from 'cheerio';
-import { getAgent, UA } from './proxy.js';
+import { scrapeHTML } from './anthill.js';
 import { categoryPageUrl } from './config.js';
-
-const FETCH_OPTS = () => ({
-  agent: getAgent(),
-  redirect: 'follow',
-  timeout: 30000,
-  headers: { 'User-Agent': UA },
-});
 
 // Extract listing ID from URL: /s-anzeige/{slug}/{id}-{cat}-{loc}
 function idFromUrl(url) {
@@ -20,9 +12,8 @@ function idFromUrl(url) {
 
 export async function scrapeCategoryPage(baseUrl, pageNum = 1) {
   const url = categoryPageUrl(baseUrl, pageNum);
-  const res = await fetch(url, FETCH_OPTS());
-  const html = await res.text();
-  const $ = cheerio.load(html);
+  const data = await scrapeHTML(url, { engine: 'axios', proxy: true });
+  const $ = cheerio.load(data.body);
 
   const listings = [];
   $('article.aditem').each((_, el) => {
@@ -42,8 +33,8 @@ export async function scrapeCategoryPage(baseUrl, pageNum = 1) {
 // ─── Listing page ─────────────────────────────────────────────────────────────
 
 export async function scrapeListing(url) {
-  const res = await fetch(url, FETCH_OPTS());
-  const html = await res.text();
+  const data = await scrapeHTML(url, { engine: 'axios', proxy: true });
+  const html = data.body;
 
   // Deletion check: page_type eVIP = deleted/expired
   const pageTypeMatch = html.match(/"page_type"\s*:\s*"([^"]+)"/);
@@ -67,7 +58,6 @@ export async function scrapeListing(url) {
 
   // Shipping
   const shipping_raw = $('.boxedarticle--details--shipping').text().trim();
-  // "Nur Abholung" = pickup only, "+ Versand ab X €" = shipping available
   const shipping_available = !shipping_raw.includes('Nur Abholung');
 
   // Structured params (Art, Zustand, etc.)
@@ -95,8 +85,9 @@ export async function scrapeListing(url) {
     }
   });
 
-  // Listing ID from URL
-  const listing_id = idFromUrl(url) || idFromUrl(res.url);
+  // Listing ID from URL (use final redirect URL if available)
+  const finalUrl = data.url || url;
+  const listing_id = idFromUrl(url) || idFromUrl(finalUrl);
 
   return {
     deleted: false,
@@ -110,7 +101,7 @@ export async function scrapeListing(url) {
       description,
       shipping_available,
       shipping_raw,
-      params,        // { Art: "Speicher", Zustand: "Gut", ... }
+      params,
       seller_name,
       seller_id,
       seller_url,

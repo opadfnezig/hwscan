@@ -1,8 +1,6 @@
-import fetch from 'node-fetch';
-import { createWriteStream, mkdirSync } from 'fs';
+import { writeFileSync, mkdirSync } from 'fs';
 import { join, extname } from 'path';
-import { pipeline } from 'stream/promises';
-import { getAgent, UA } from './proxy.js';
+import { scrapeBinary } from './anthill.js';
 import { IMAGES_DIR } from './config.js';
 
 mkdirSync(IMAGES_DIR, { recursive: true });
@@ -20,9 +18,8 @@ export async function downloadImages(listingId, imageUrls) {
     const filename = `ka_de_${listingId}_${i}${ext(url)}`;
     const filepath = join(IMAGES_DIR, filename);
     try {
-      const res = await fetch(url, { agent: getAgent(), timeout: 60000, headers: { 'User-Agent': UA } });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      await pipeline(res.body, createWriteStream(filepath));
+      const buf = await scrapeBinary(url, { proxy: true, timeout: 60000 });
+      writeFileSync(filepath, buf);
       paths.push(filepath);
     } catch (err) {
       console.error(`[downloader] failed ${url}: ${err.message}`);

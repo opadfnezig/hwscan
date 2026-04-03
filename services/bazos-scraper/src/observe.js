@@ -43,7 +43,6 @@ async function sendTelegram(text) {
   if (now - lastAlertAt < ALERT_COOLDOWN_MS) return;
   lastAlertAt = now;
   try {
-    const { default: fetch } = await import('node-fetch');
     await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },

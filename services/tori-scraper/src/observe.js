@@ -1,6 +1,5 @@
 // observe.js — shared observability module
 // Provides: structured logging, health state, Telegram alerts, worker/kafka event hooks.
-// Copied into each scraper's src/ directory (Docker build context isolation).
 
 const TELEGRAM_TOKEN   = process.env.TELEGRAM_TOKEN || '';
 const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID || '';
@@ -43,7 +42,6 @@ async function sendTelegram(text) {
   if (now - lastAlertAt < ALERT_COOLDOWN_MS) return;
   lastAlertAt = now;
   try {
-    const { default: fetch } = await import('node-fetch');
     await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
@@ -58,32 +56,6 @@ async function sendTelegram(text) {
 
 export function alertTelegram(msg) {
   return sendTelegram(`[hw5c4n] <b>${PLATFORM_NAME}</b>\n${msg}`);
-}
-
-// ── Worker event wiring ──────────────────────────────────────────────────────
-
-export function attachWorkerEvents(worker, log) {
-  worker.on('completed', (job, result) => {
-    healthState.consecutiveFails = 0;
-    healthState.lastSuccess = new Date().toISOString();
-    log.info('job done', { job_id: job.id, result: result?.status });
-  });
-
-  worker.on('failed', async (job, err) => {
-    healthState.errors++;
-    healthState.lastError = new Date().toISOString();
-    healthState.consecutiveFails++;
-    log.error('job failed', { job_id: job?.id, attempt: job?.attemptsMade, err: err.message });
-    if (healthState.consecutiveFails >= ALERT_THRESHOLD) {
-      await alertTelegram(`${healthState.consecutiveFails} consecutive job failures\nLast: ${err.message}`);
-      healthState.consecutiveFails = 0;
-    }
-  });
-
-  worker.on('error', (err) => {
-    healthState.errors++;
-    log.error('worker error', { err: err.message });
-  });
 }
 
 // ── Kafka producer hooks ─────────────────────────────────────────────────────

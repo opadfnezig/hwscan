@@ -1,20 +1,6 @@
-import fetch from 'node-fetch';
 import * as cheerio from 'cheerio';
-import { getAgent } from './proxy.js';
+import { scrape } from './anthill.js';
 import { BASE_URL, DOMAIN_SUFFIX } from './config.js';
-
-const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
-
-const FETCH_OPTS = {
-  headers: {
-    'User-Agent': UA,
-    'Accept': 'text/html,application/xhtml+xml',
-    'Accept-Language': 'cs,sk;q=0.9,en;q=0.5',
-  },
-  redirect: 'follow',
-  timeout: 30000,
-  // agent attached per-call via getAgent()
-};
 
 // ─── Category page ─────────────────────────────────────────────────────────
 
@@ -28,13 +14,13 @@ function categoryUrl(pageNum) {
 // Each listing link appears twice (image href + title href) — deduplicated.
 export async function scrapeCategoryPage(pageNum = 1) {
   const url = categoryUrl(pageNum);
-  const response = await fetch(url, { ...FETCH_OPTS, agent: getAgent() });
+  const data = await scrape(url, { engine: 'axios', proxy: true });
 
-  if (!response.ok) {
-    throw new Error(`Category page ${pageNum} (${url}): HTTP ${response.status}`);
+  if (data.statusCode >= 400) {
+    throw new Error(`Category page ${pageNum} (${url}): HTTP ${data.statusCode}`);
   }
 
-  const html = await response.text();
+  const html = data.body;
   const $ = cheerio.load(html);
 
   const seen = new Set();
@@ -95,14 +81,15 @@ function parseImages($) {
 
 // Returns { deleted: true } or { deleted: false, data: ListingData }
 export async function scrapeListing(url) {
-  const response = await fetch(url, { ...FETCH_OPTS, agent: getAgent() });
+  const data = await scrape(url, { engine: 'axios', proxy: true });
 
   // After redirect-follow, if the final URL no longer contains /inzerat/ the listing was removed.
-  if (!response.url.includes('/inzerat/')) {
+  // Anthill returns data.url which is the final URL after redirects.
+  if (!data.url.includes('/inzerat/')) {
     return { deleted: true };
   }
 
-  const html = await response.text();
+  const html = data.body;
   const $ = cheerio.load(html);
 
   // Sanity check — a valid listing always has h1.nadpisdetail

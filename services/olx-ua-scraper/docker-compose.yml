@@ -1,25 +1,3 @@
-x-worker-base: &worker-base
-  build: ../olx-scraper
-  restart: unless-stopped
-  environment: &worker-env
-    ROLE: worker
-    DOMAIN: olx.ua
-    CATEGORY_ID: "38"
-    REDIS_URL: redis://redis:6379
-    KAFKA_BROKERS: ${KAFKA_BROKERS:-172.16.17.3:9092}
-    KAFKA_TOPIC: ${KAFKA_TOPIC:-olx.ua.listings}
-    IMAGES_DIR: /data/images
-    WORKER_CONCURRENCY: "2"
-    SEEN_ID_LIMIT: "5000"
-    PLATFORM_NAME: ${PLATFORM_NAME:-olx.ua}
-    TELEGRAM_TOKEN: ${TELEGRAM_TOKEN:-}
-    TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID:-}
-  volumes:
-    - /data/images:/data/images
-  depends_on:
-    redis:
-      condition: service_healthy
-
 services:
   redis:
     image: redis:7-alpine
@@ -37,7 +15,6 @@ services:
     build: ../olx-scraper
     restart: unless-stopped
     environment:
-      ROLE: controller
       DOMAIN: olx.ua
       CATEGORY_ID: "38"
       REDIS_URL: redis://redis:6379
@@ -46,7 +23,7 @@ services:
       SCAN_INTERVAL_MS: "600000"
       IMAGES_DIR: /data/images
       SEEN_ID_LIMIT: "5000"
-      PROXY_INDEX: "0"
+      ANTHILL_URL: ${ANTHILL_URL:-http://172.16.5.13:3100}
       PLATFORM_NAME: ${PLATFORM_NAME:-olx.ua}
       TELEGRAM_TOKEN: ${TELEGRAM_TOKEN:-}
       TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID:-}
@@ -57,96 +34,6 @@ services:
     depends_on:
       redis:
         condition: service_healthy
-
-  worker-0:
-    <<: *worker-base
-    environment:
-      <<: *worker-env
-      PROXY_INDEX: "0"
-
-  worker-1:
-    <<: *worker-base
-    environment:
-      <<: *worker-env
-      PROXY_INDEX: "1"
-
-  worker-2:
-    <<: *worker-base
-    environment:
-      <<: *worker-env
-      PROXY_INDEX: "2"
-
-  worker-3:
-    <<: *worker-base
-    environment:
-      <<: *worker-env
-      PROXY_INDEX: "3"
-
-  worker-4:
-    <<: *worker-base
-    environment:
-      <<: *worker-env
-      PROXY_INDEX: "4"
-
-  worker-5:
-    <<: *worker-base
-    environment:
-      <<: *worker-env
-      PROXY_INDEX: "5"
-
-  worker-6:
-    <<: *worker-base
-    environment:
-      <<: *worker-env
-      PROXY_INDEX: "6"
-
-  worker-7:
-    <<: *worker-base
-    environment:
-      <<: *worker-env
-      PROXY_INDEX: "7"
-
-  worker-8:
-    <<: *worker-base
-    environment:
-      <<: *worker-env
-      PROXY_INDEX: "8"
-
-  worker-9:
-    <<: *worker-base
-    environment:
-      <<: *worker-env
-      PROXY_INDEX: "9"
-
-  worker-10:
-    <<: *worker-base
-    environment:
-      <<: *worker-env
-      PROXY_INDEX: "10"
-
-  worker-11:
-    <<: *worker-base
-    environment:
-      <<: *worker-env
-      PROXY_INDEX: "11"
-
-  worker-12:
-    <<: *worker-base
-    environment:
-      <<: *worker-env
-      PROXY_INDEX: "12"
-
-  worker-13:
-    <<: *worker-base
-    environment:
-      <<: *worker-env
-      PROXY_INDEX: "13"
-
-  worker-14:
-    <<: *worker-base
-    environment:
-      <<: *worker-env
-      PROXY_INDEX: "14"
 
 volumes:
   redis-data:
